@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:layout_marginBottom="8dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/ivFriendAvatar"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:background="#E0E0E0"
+        android:src="@android:drawable/ic_menu_myplaces"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvFriendName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:text="Friends"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="@id/ivFriendAvatar"
+        app:layout_constraintStart_toEndOf="@id/ivFriendAvatar"
+        app:layout_constraintEnd_toStartOf="@id/btnMessage" />
+
+    <TextView
+        android:id="@+id/tvMutualFriends"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:text="5 mutual friends"
+        android:textSize="13sp"
+        android:textColor="#757575"
+        app:layout_constraintTop_toBottomOf="@id/tvFriendName"
+        app:layout_constraintStart_toEndOf="@id/ivFriendAvatar"
+        app:layout_constraintEnd_toStartOf="@id/btnMessage" />
+
+    <Button
+        android:id="@+id/btnMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chat"
+        android:textSize="12sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:padding="30dp"
+    android:gravity="center">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp">
+
+        <TextView
+            android:id="@+id/tv_profile_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GUEST!"
+            android:textSize="32sp"
+            android:textColor="#555555"
+            android:layout_centerVertical="true" />
+
+        <ImageView
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_alignParentRight="true"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_menu_gallery"
+            android:background="@drawable/border_rect" />
+    </RelativeLayout>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Name" android:textColor="#666666" />
+    <EditText android:id="@+id/edt_prof_name" android:layout_width="match_parent" android:layout_height="45dp" android:text="Alice" android:background="@drawable/border_rect" android:layout_marginBottom="12dp" />
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Email" android:textColor="#666666" />
+    <EditText android:id="@+id/edt_prof_email" android:layout_width="match_parent" android:layout_height="45dp" android:text="test@mail.com" android:background="@drawable/border_rect" android:layout_marginBottom="12dp" />
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Address" android:textColor="#666666" />
+    <EditText android:id="@+id/edt_prof_address" android:layout_width="match_parent" android:layout_height="45dp" android:text="XXXXXXXX" android:background="@drawable/border_rect" android:layout_marginBottom="12dp" />
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Avatar URL" android:textColor="#666666" />
+    <EditText android:layout_width="match_parent" android:layout_height="45dp" android:text="http://xxxx.xxx.xxxx" android:textSize="12sp" android:background="@drawable/border_rect" android:layout_marginBottom="12dp" />
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Description" android:textColor="#666666" />
+    <EditText android:id="@+id/edt_prof_description" android:layout_width="match_parent" android:layout_height="100dp" android:gravity="top|left" android:padding="10dp" android:background="@drawable/border_rect" android:layout_marginBottom="25dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_save"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:text="SAVE"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/border_rect"
+                android:textColor="#555555"
+                android:textAllCaps="false"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_logout"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:text="LOG OUT"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/border_rect"
+                android:textColor="#555555"
+                android:textAllCaps="false"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

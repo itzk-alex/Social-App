@@ -10,13 +10,15 @@ import com.example.a24520085_buihotrucanh.network.ApiClient;
 import com.example.a24520085_buihotrucanh.network.models.RegisterRequest;
 import com.example.a24520085_buihotrucanh.network.models.RegisterResponse;
 
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText edtName, edtEmail, edtPassword, edtConfirmPassword;
+    private EditText edtName, edtEmail, edtPhone, edtPassword, edtConfirmPassword;
     private Button btnCreate;
 
     @Override
@@ -26,6 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         edtName = findViewById(R.id.edt_reg_name);
         edtEmail = findViewById(R.id.edt_reg_email);
+        edtPhone = findViewById(R.id.edt_reg_phone);
         edtPassword = findViewById(R.id.edt_reg_password);
         edtConfirmPassword = findViewById(R.id.edt_reg_confirm_password); // thêm dòng này
         btnCreate = findViewById(R.id.btn_create);
@@ -33,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnCreate.setOnClickListener(v -> {
             String name = edtName.getText().toString().trim();
             String email = edtEmail.getText().toString().trim();
+            String phoneRaw = edtPhone.getText().toString().trim();
             String password = edtPassword.getText().toString();
             String confirmPassword = edtConfirmPassword.getText().toString();
 
@@ -47,39 +51,62 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
+            String phoneDigits = phoneRaw.replaceAll("\\s+", "");
+            if (phoneDigits.isEmpty()) {
+                Toast.makeText(this, "Please input phone number!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!phoneDigits.matches("^[0-9]{9,15}$")) {
+                Toast.makeText(this, "Invalid phone number (9–15 numbers)!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             String passwordPattern = "^(?=.*[A-Z])(?=.*[0-9]).{6,}$";
             if (!password.matches(passwordPattern)) {
-                Toast.makeText(this, "Password phải có ít nhất 6 ký tự, gồm 1 chữ hoa, 1 số", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Password need to have at least 6 letters, 1 capital letter, 1 number", Toast.LENGTH_LONG).show();
                 return;
             }
 
             if (!password.equals(confirmPassword)) {
-                Toast.makeText(this, "Mật khẩu xác nhận không khớp!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Confirm password do not match!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // API yêu cầu phone, UI hiện tại chưa có nên gửi rỗng.
-            ApiClient.api().register(new RegisterRequest(name, email, "", password)).enqueue(new Callback<RegisterResponse>() {
+            ApiClient.api().register(new RegisterRequest(name, email, phoneDigits, password)).enqueue(new Callback<RegisterResponse>() {
                 @Override
                 public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-                    if (!response.isSuccessful() || response.body() == null) {
-                        Toast.makeText(RegisterActivity.this, "Đăng ký thất bại!", Toast.LENGTH_SHORT).show();
+                    if (!response.isSuccessful()) {
+                        String msg = "Registration failed!";
+                        try {
+                            if (response.errorBody() != null) {
+                                String err = response.errorBody().string().trim();
+                                if (!err.isEmpty() && err.length() <= 300) {
+                                    msg = err;
+                                }
+                            }
+                        } catch (IOException ignored) { }
+                        Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    if (response.body() == null) {
+                        Toast.makeText(RegisterActivity.this, "Registration failed!", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     RegisterResponse res = response.body();
                     if (res.status != null && !res.status.equalsIgnoreCase("success") && !res.status.equalsIgnoreCase("ok")) {
-                        Toast.makeText(RegisterActivity.this, res.message != null ? res.message : "Đăng ký thất bại!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, res.message != null ? res.message : "Registration failed!", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Registration succesful!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
 
                 @Override
                 public void onFailure(Call<RegisterResponse> call, Throwable t) {
-                    Toast.makeText(RegisterActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Internet connection failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         });

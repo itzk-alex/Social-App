@@ -1,65 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#FFFFFF"
-    android:padding="30dp"
-    android:gravity="center">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp">
-
-        <TextView
-            android:id="@+id/tv_profile_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GUEST!"
-            android:textSize="32sp"
-            android:textColor="#555555"
-            android:layout_centerVertical="true" />
-
-        <ImageView
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:layout_alignParentRight="true"
-            android:padding="8dp"
-            android:src="@android:drawable/ic_menu_gallery"
-            android:background="@drawable/border_rect" />
-    </RelativeLayout>
-
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Name" android:textColor="#666666" />
-    <EditText android:id="@+id/edt_prof_name" android:layout_width="match_parent" android:layout_height="45dp" android:text="Alice" android:background="@drawable/border_rect" android:layout_marginBottom="12dp" />
-
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Email" android:textColor="#666666" />
-    <EditText android:id="@+id/edt_prof_email" android:layout_width="match_parent" android:layout_height="45dp" android:text="test@mail.com" android:background="@drawable/border_rect" android:layout_marginBottom="12dp" />
-
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Address" android:textColor="#666666" />
-    <EditText android:id="@+id/edt_prof_address" android:layout_width="match_parent" android:layout_height="45dp" android:text="XXXXXXXX" android:background="@drawable/border_rect" android:layout_marginBottom="12dp" />
-
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Avatar URL" android:textColor="#666666" />
-    <EditText android:layout_width="match_parent" android:layout_height="45dp" android:text="http://xxxx.xxx.xxxx" android:textSize="12sp" android:background="@drawable/border_rect" android:layout_marginBottom="12dp" />
-
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Description" android:textColor="#666666" />
-    <EditText android:id="@+id/edt_prof_description" android:layout_width="match_parent" android:layout_height="100dp" android:gravity="top|left" android:padding="10dp" android:background="@drawable/border_rect" android:layout_marginBottom="25dp" />
+    android:fillViewport="true"
+    android:background="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="30dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="100dp">
+
+            <TextView
+                android:id="@+id/tv_profile_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GUEST!"
+                android:textSize="32sp"
+                android:textColor="#555555"
+                android:layout_centerVertical="true" />
+
+            <ImageView
+                android:id="@+id/iv_prof_avatar"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_alignParentEnd="true"
+                android:padding="8dp"
+                android:contentDescription="@string/profile_avatar"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:background="@drawable/border_rect" />
+        </RelativeLayout>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Name" android:textColor="#666666" />
+        <EditText android:id="@+id/edt_prof_name" android:layout_width="match_parent" android:layout_height="45dp" android:text="Alice" android:background="@drawable/border_rect" android:layout_marginBottom="12dp" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Email" android:textColor="#666666" />
+        <EditText android:id="@+id/edt_prof_email" android:layout_width="match_parent" android:layout_height="45dp" android:text="test@mail.com" android:background="@drawable/border_rect" android:layout_marginBottom="12dp" android:inputType="textEmailAddress" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Phone" android:textColor="#666666" />
+        <EditText android:id="@+id/edt_prof_phone" android:layout_width="match_parent" android:layout_height="45dp" android:background="@drawable/border_rect" android:layout_marginBottom="12dp" android:hint="0901234567" android:inputType="phone" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Address" android:textColor="#666666" />
+        <EditText android:id="@+id/edt_prof_address" android:layout_width="match_parent" android:layout_height="45dp" android:text="XXXXXXXX" android:background="@drawable/border_rect" android:layout_marginBottom="12dp" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Avatar URL" android:textColor="#666666" />
+        <EditText android:id="@+id/edt_prof_avatar_url" android:layout_width="match_parent" android:layout_height="45dp" android:hint="https://..." android:textSize="12sp" android:background="@drawable/border_rect" android:layout_marginBottom="12dp" android:inputType="textUri" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Description" android:textColor="#666666" />
+        <EditText android:id="@+id/edt_prof_description" android:layout_width="match_parent" android:layout_height="100dp" android:gravity="top|start" android:padding="10dp" android:background="@drawable/border_rect" android:layout_marginBottom="16dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_save"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="50dp"
                 android:text="SAVE"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/border_rect"
                 android:textColor="#555555"
                 android:textAllCaps="false"/>
@@ -69,10 +76,28 @@
                 android:layout_weight="1"
                 android:layout_height="50dp"
                 android:text="LOG OUT"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/border_rect"
                 android:textColor="#555555"
                 android:textAllCaps="false"/>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_profile_posts_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bài viết (API)"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_profile_posts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:minHeight="120dp" />
+
     </LinearLayout>
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

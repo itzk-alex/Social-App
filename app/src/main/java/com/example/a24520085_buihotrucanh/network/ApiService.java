@@ -13,7 +13,7 @@ import com.example.a24520085_buihotrucanh.network.models.RegisterResponse;
 import com.example.a24520085_buihotrucanh.network.models.UpdateProfileRequest;
 import com.example.a24520085_buihotrucanh.network.models.UpdateProfileResponse;
 
-import java.util.List;
+import com.google.gson.JsonElement;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -32,7 +32,7 @@ public interface ApiService {
     Call<RegisterResponse> register(@Body RegisterRequest body);
 
     @GET("api/users/emails")
-    Call<List<String>> getAllUserEmails();
+    Call<JsonElement> getAllUserEmails();
 
     @GET("api/users/{user_id}/friends")
     Call<FriendsResponse> getFriends(@Path("user_id") String userId);

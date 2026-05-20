@@ -1,5 +1,7 @@
 package com.example.a24520085_buihotrucanh;
 
+import com.example.a24520085_buihotrucanh.network.models.ApiPostDto;
+
 import java.util.Objects;
 
 public class Post {
@@ -8,17 +10,42 @@ public class Post {
     private String name;
     private String date;
     private String content;
+    private String avatarUrl;
 
     public Post(String name, String date, String content) {
-        this(null, null, name, date, content);
+        this(null, null, name, date, content, null);
+    }
+
+    public Post(String name, String date, String content, String avatarUrl) {
+        this(null, null, name, date, content, avatarUrl);
     }
 
     public Post(String id, String userId, String name, String date, String content) {
+        this(id, userId, name, date, content, null);
+    }
+
+    public Post(String id, String userId, String name, String date, String content, String avatarUrl) {
         this.id = id;
         this.userId = userId;
-        this.name = name;
-        this.date = date;
-        this.content = content;
+        this.name = name != null ? name : "";
+        this.date = date != null ? date : "";
+        this.content = content != null ? content : "";
+        this.avatarUrl = avatarUrl;
+    }
+
+    public static Post fromApiDto(ApiPostDto p) {
+        if (p == null) {
+            return new Post("", "", "");
+        }
+        String authorName = UserData.registeredName;
+        String avatarUrl = null;
+        if (p.author != null) {
+            if (p.author.name != null) authorName = p.author.name;
+            avatarUrl = p.author.avatarUrl;
+        }
+        String createdAt = p.createdAt != null ? p.createdAt : "";
+        String content = p.content != null ? p.content : "";
+        return new Post(p.id, p.userId, authorName, createdAt, content, avatarUrl);
     }
 
     public String getId() { return id; }
@@ -27,7 +54,7 @@ public class Post {
     public String getAuthor() { return name; }
     public String getDate() { return date; }
     public String getContent() { return content; }
-
+    public String getAvatarUrl() { return avatarUrl; }
 
     @Override
     public boolean equals(Object o) {

@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     if (!response.isSuccessful() || response.body() == null || response.body().user == null) {
-                        Toast.makeText(LoginActivity.this, "Không thể đăng nhập!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Login failed!", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
-                    Toast.makeText(LoginActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Internet connection failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         });

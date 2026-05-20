@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">24520085_BuiHoTrucAnh</string>
+    <string name="app_name">Social App</string>
+    <string name="friends_list_with_count">Friends List (%1$d)</string>
+    <string name="profile_avatar">Ảnh đại diện</string>
+    <string name="profile_posts_header_empty">Bài viết — cần đăng nhập API để xem</string>
+    <string name="profile_posts_header_loading">Bài viết — đang tải…</string>
+    <string name="profile_posts_header_count">Bài viết của user (%1$d)</string>
+    <string name="profile_posts_header_error">Bài viết — không tải được</string>
+    <string name="friend_requests_empty_api">Không có lời mời kết bạn.\n\nAPI hiện tại không có endpoint gửi/nhận/chấp nhận lời mời — màn này chỉ để giao diện. Danh sách bạn thật lấy từ GET /api/users/{id}/friends.</string>
 </resources>

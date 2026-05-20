@@ -17,6 +17,7 @@ import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.a24520085_buihotrucanh.network.ApiClient;
 import com.example.a24520085_buihotrucanh.network.models.ApiPostDto;
@@ -34,6 +35,7 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
+    private SwipeRefreshLayout swipeHome;
     private EditText edtContent;
     private AppCompatButton btnPost;
     private ListView lvPosts;
@@ -41,11 +43,6 @@ public class HomeFragment extends Fragment {
     private PostAdapter adapter;
     private boolean isSortDateAsc = true;
     private boolean isSortAuthorAsc = true;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Nullable
     @Override
@@ -58,15 +55,18 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        swipeHome = view.findViewById(R.id.swipeHome);
         edtContent = view.findViewById(R.id.edt_post_content);
         btnPost = view.findViewById(R.id.btn_post);
         lvPosts = view.findViewById(R.id.lv_posts);
 
         postList = UserData.globalPostList;
-        adapter = new PostAdapter(requireContext(), postList);
+        adapter = new PostAdapter(requireContext(), postList, () -> fetchPosts(null));
         lvPosts.setAdapter(adapter);
 
-        fetchPosts();
+        swipeHome.setOnRefreshListener(() -> fetchPosts(() -> swipeHome.setRefreshing(false)));
+
+        fetchPosts(null);
 
         btnPost.setOnClickListener(v -> {
             String content = edtContent.getText().toString().trim();
@@ -78,24 +78,23 @@ public class HomeFragment extends Fragment {
         setupMenu();
     }
 
-    private void fetchPosts() {
+    private void fetchPosts(@Nullable Runnable onComplete) {
         ApiClient.api().getAllPosts().enqueue(new Callback<PostsResponse>() {
             @Override
             public void onResponse(Call<PostsResponse> call, Response<PostsResponse> response) {
-                if (!response.isSuccessful() || response.body() == null || response.body().data == null) return;
-
-                postList.clear();
-                for (ApiPostDto p : response.body().data) {
-                    String authorName = (p.author != null && p.author.name != null) ? p.author.name : UserData.registeredName;
-                    String createdAt = p.createdAt != null ? p.createdAt : "";
-                    postList.add(new Post(p.id, p.userId, authorName, createdAt, p.content != null ? p.content : ""));
+                if (response.isSuccessful() && response.body() != null && response.body().data != null) {
+                    postList.clear();
+                    for (ApiPostDto p : response.body().data) {
+                        postList.add(Post.fromApiDto(p));
+                    }
+                    if (adapter != null) adapter.notifyDataSetChanged();
                 }
-                if (adapter != null) adapter.notifyDataSetChanged();
+                if (onComplete != null) onComplete.run();
             }
 
             @Override
             public void onFailure(Call<PostsResponse> call, Throwable t) {
-                // im lặng để UI không spam; user vẫn có thể post
+                if (onComplete != null) onComplete.run();
             }
         });
     }
@@ -103,7 +102,7 @@ public class HomeFragment extends Fragment {
     private void createPost(String content) {
         String uid = UserData.userId;
         if (uid == null || uid.isEmpty()) {
-            postList.add(0, new Post(UserData.registeredName, getCurrentDate(), content));
+            postList.add(0, new Post(UserData.registeredName, getCurrentDate(), content, UserData.AvatarUrl));
             adapter.notifyDataSetChanged();
             edtContent.setText("");
             return;
@@ -113,12 +112,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().data != null) {
-                    ApiPostDto p = response.body().data;
-                    String authorName = (p.author != null && p.author.name != null) ? p.author.name : UserData.registeredName;
-                    String createdAt = p.createdAt != null ? p.createdAt : getCurrentDate();
-                    postList.add(0, new Post(p.id, p.userId, authorName, createdAt, p.content != null ? p.content : content));
+                    postList.add(0, Post.fromApiDto(response.body().data));
                 } else {
-                    postList.add(0, new Post(UserData.registeredName, getCurrentDate(), content));
+                    postList.add(0, new Post(UserData.registeredName, getCurrentDate(), content, UserData.AvatarUrl));
                 }
                 if (adapter != null) adapter.notifyDataSetChanged();
                 edtContent.setText("");
@@ -126,11 +122,17 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<PostResponse> call, Throwable t) {
-                postList.add(0, new Post(UserData.registeredName, getCurrentDate(), content));
+                postList.add(0, new Post(UserData.registeredName, getCurrentDate(), content, UserData.AvatarUrl));
                 if (adapter != null) adapter.notifyDataSetChanged();
                 edtContent.setText("");
             }
         });
+    }
+
+    private static int compareNullable(String a, String b) {
+        String sa = a != null ? a : "";
+        String sb = b != null ? b : "";
+        return sa.compareTo(sb);
     }
 
     private void setupMenu() {
@@ -154,9 +156,9 @@ public class HomeFragment extends Fragment {
 
                 if (id == R.id.opt_sort_date) {
                     if (isSortDateAsc) {
-                        postList.sort((p1, p2) -> p1.getDate().compareTo(p2.getDate()));
+                        postList.sort((p1, p2) -> compareNullable(p1.getDate(), p2.getDate()));
                     } else {
-                        postList.sort((p1, p2) -> p2.getDate().compareTo(p1.getDate()));
+                        postList.sort((p1, p2) -> compareNullable(p2.getDate(), p1.getDate()));
                     }
                     isSortDateAsc = !isSortDateAsc;
                     adapter.notifyDataSetChanged();
@@ -165,9 +167,9 @@ public class HomeFragment extends Fragment {
 
                 if (id == R.id.opt_sort_author) {
                     if (isSortAuthorAsc) {
-                        postList.sort((p1, p2) -> p1.getAuthor().compareToIgnoreCase(p2.getAuthor()));
+                        postList.sort((p1, p2) -> compareNullable(p1.getAuthor(), p2.getAuthor()));
                     } else {
-                        postList.sort((p1, p2) -> p2.getAuthor().compareToIgnoreCase(p1.getAuthor()));
+                        postList.sort((p1, p2) -> compareNullable(p2.getAuthor(), p1.getAuthor()));
                     }
                     isSortAuthorAsc = !isSortAuthorAsc;
                     adapter.notifyDataSetChanged();

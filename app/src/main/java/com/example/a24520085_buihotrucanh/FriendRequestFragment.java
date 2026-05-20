@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -11,11 +12,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
+import java.util.Collections;
+import java.util.List;
 
 public class FriendRequestFragment extends Fragment {
 
     private RecyclerView rvRequests;
+    private TextView tvEmpty;
     private FriendRequestAdapter adapter;
     private FriendViewModel viewModel;
 
@@ -25,10 +28,17 @@ public class FriendRequestFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(FriendViewModel.class);
         rvRequests = view.findViewById(R.id.rvFriendRequests);
-        rvRequests.setLayoutManager(new LinearLayoutManager(getContext()));
+        tvEmpty = view.findViewById(R.id.tvEmpty);
+        rvRequests.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         viewModel.getRequests().observe(getViewLifecycleOwner(), requests -> {
-            adapter = new FriendRequestAdapter(requests, new FriendRequestAdapter.OnRequestActionListener() {
+            boolean empty = requests == null || requests.isEmpty();
+            tvEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
+            rvRequests.setVisibility(empty ? View.GONE : View.VISIBLE);
+            if (empty) {
+                tvEmpty.setText(R.string.friend_requests_empty_api);
+            }
+            adapter = new FriendRequestAdapter(requests != null ? requests : Collections.emptyList(), new FriendRequestAdapter.OnRequestActionListener() {
                 @Override
                 public void onAccept(FriendRequestItem item) {
                     viewModel.addFriend(new FriendItem(item.getName(), "Mới kết bạn"));
